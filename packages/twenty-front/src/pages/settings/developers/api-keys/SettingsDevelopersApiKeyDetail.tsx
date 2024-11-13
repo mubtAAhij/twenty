@@ -24,6 +24,7 @@ import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { TextInput } from '@/ui/input/components/TextInput';
 import { ConfirmationModal } from '@/ui/layout/modal/components/ConfirmationModal';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 import { useGenerateApiKeyTokenMutation } from '~/generated/graphql';
 
 const StyledInfo = styled.span`
@@ -41,6 +42,7 @@ const StyledInputContainer = styled.div`
 `;
 
 export const SettingsDevelopersApiKeyDetail = () => {
+  const { t } = useI18n();
   const { enqueueSnackBar } = useSnackBar();
   const [isRegenerateKeyModalOpen, setIsRegenerateKeyModalOpen] =
     useState(false);
@@ -82,9 +84,13 @@ export const SettingsDevelopersApiKeyDetail = () => {
         navigate(developerPath);
       }
     } catch (err) {
-      enqueueSnackBar(`Error deleting api key: ${err}`, {
-        variant: SnackBarVariant.Error,
-      });
+      enqueueSnackBar(
+        // @ts-expect-error
+        t('Error deleting api key: {dynamic1}', { dynamic1: err }),
+        {
+          variant: SnackBarVariant.Error,
+        },
+      );
     } finally {
       setIsLoading(false);
     }
@@ -131,9 +137,13 @@ export const SettingsDevelopersApiKeyDetail = () => {
         }
       }
     } catch (err) {
-      enqueueSnackBar(`Error regenerating api key: ${err}`, {
-        variant: SnackBarVariant.Error,
-      });
+      enqueueSnackBar(
+        // @ts-expect-error
+        t('Error regenerating api key: {dynamic1}', { dynamic1: err }),
+        {
+          variant: SnackBarVariant.Error,
+        },
+      );
     } finally {
       setIsLoading(false);
     }
@@ -146,11 +156,11 @@ export const SettingsDevelopersApiKeyDetail = () => {
           title={apiKeyData?.name}
           links={[
             {
-              children: 'Workspace',
+              children: t('Workspace'),
               href: getSettingsPagePath(SettingsPath.Workspace),
             },
-            { children: 'Developers', href: developerPath },
-            { children: `${apiKeyName} API Key` },
+            { children: t('Developers'), href: developerPath },
+            { children: t('{dynamic1} API Key', { dynamic1: apiKeyName }) },
           ]}
         >
           <SettingsPageContainer>
@@ -158,8 +168,10 @@ export const SettingsDevelopersApiKeyDetail = () => {
               {apiKeyToken ? (
                 <>
                   <H2Title
-                    title="API Key"
-                    description="Copy this key as it will only be visible this one time"
+                    title={t('API Key')}
+                    description={t(
+                      'Copy this key as it will only be visible this one time',
+                    )}
                   />
                   <ApiKeyInput apiKey={apiKeyToken} />
                   <StyledInfo>
@@ -169,12 +181,12 @@ export const SettingsDevelopersApiKeyDetail = () => {
               ) : (
                 <>
                   <H2Title
-                    title="API Key"
-                    description="Regenerate an API key"
+                    title={t('API Key')}
+                    description={t('Regenerate an API key')}
                   />
                   <StyledInputContainer>
                     <Button
-                      title="Regenerate Key"
+                      title={t('Regenerate Key')}
                       Icon={IconRepeat}
                       onClick={() => setIsRegenerateKeyModalOpen(true)}
                     />
@@ -190,7 +202,10 @@ export const SettingsDevelopersApiKeyDetail = () => {
               )}
             </Section>
             <Section>
-              <H2Title title="Name" description="Name of your API key" />
+              <H2Title
+                title={t('Name')}
+                description={t('Name of your API key')}
+              />
               <ApiKeyNameInput
                 apiKeyName={apiKeyName}
                 apiKeyId={apiKeyData?.id}
@@ -200,11 +215,11 @@ export const SettingsDevelopersApiKeyDetail = () => {
             </Section>
             <Section>
               <H2Title
-                title="Expiration"
-                description="When the key will be disabled"
+                title={t('Expiration')}
+                description={t('When the key will be disabled')}
               />
               <TextInput
-                placeholder="E.g. backoffice integration"
+                placeholder={t('E.g. backoffice integration')}
                 value={formatExpiration(
                   apiKeyData?.expiresAt || '',
                   true,
@@ -216,13 +231,13 @@ export const SettingsDevelopersApiKeyDetail = () => {
             </Section>
             <Section>
               <H2Title
-                title="Danger zone"
-                description="Delete this integration"
+                title={t('Danger zone')}
+                description={t('Delete this integration')}
               />
               <Button
                 accent="danger"
                 variant="secondary"
-                title="Delete"
+                title={t('Delete')}
                 Icon={IconTrash}
                 onClick={() => setIsDeleteApiKeyModalOpen(true)}
               />
@@ -235,11 +250,12 @@ export const SettingsDevelopersApiKeyDetail = () => {
         confirmationValue="yes"
         isOpen={isDeleteApiKeyModalOpen}
         setIsOpen={setIsDeleteApiKeyModalOpen}
-        title="Delete API key"
+        title={t('Delete API key')}
         subtitle={
           <>
-            Please type "yes" to confirm you want to delete this API Key. Be
-            aware that any script using this key will stop working.
+            {t(
+              'Please type ”yes” to confirm you want to delete this API Key. Be aware that any script using this key will stop working.',
+            )}
           </>
         }
         onConfirmClick={deleteIntegration}
@@ -251,16 +267,16 @@ export const SettingsDevelopersApiKeyDetail = () => {
         confirmationValue="yes"
         isOpen={isRegenerateKeyModalOpen}
         setIsOpen={setIsRegenerateKeyModalOpen}
-        title="Regenerate an API key"
+        title={t('Regenerate an API key')}
         subtitle={
           <>
-            If you’ve lost this key, you can regenerate it, but be aware that
-            any script using this key will need to be updated. Please type "yes"
-            to confirm.
+            {t(
+              'If you’ve lost this key, you can regenerate it, but be aware that any script using this key will need to be updated. Please type ”yes” to confirm.',
+            )}
           </>
         }
         onConfirmClick={regenerateApiKey}
-        deleteButtonText="Regenerate key"
+        deleteButtonText={t('Regenerate key')}
         loading={isLoading}
       />
     </>

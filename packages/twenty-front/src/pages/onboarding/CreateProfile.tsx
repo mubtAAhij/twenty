@@ -21,6 +21,7 @@ import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { TextInputV2 } from '@/ui/input/components/TextInputV2';
 import { useScopedHotkeys } from '@/ui/utilities/hotkey/hooks/useScopedHotkeys';
 import { WorkspaceMember } from '@/workspace-member/types/WorkspaceMember';
+import { useI18n } from '@quetzallabs/i18n';
 import { OnboardingStatus } from '~/generated/graphql';
 import { isDefined } from '~/utils/isDefined';
 
@@ -45,16 +46,22 @@ const StyledComboInputContainer = styled.div`
   }
 `;
 
-const validationSchema = z
-  .object({
-    firstName: z.string().min(1, { message: 'First name can not be empty' }),
-    lastName: z.string().min(1, { message: 'Last name can not be empty' }),
-  })
-  .required();
-
-type Form = z.infer<typeof validationSchema>;
-
 export const CreateProfile = () => {
+  const { t } = useI18n();
+  const validationSchema = z
+    .object({
+      firstName: z.string().min(1, {
+        message: t('First name can not be empty'),
+      }),
+      lastName: z.string().min(1, {
+        message: t('Last name can not be empty'),
+      }),
+    })
+    .required();
+
+  type Form = z.infer<typeof validationSchema>;
+
+
   const onboardingStatus = useOnboardingStatus();
   const setNextOnboardingStatus = useSetNextOnboardingStatus();
   const { enqueueSnackBar } = useSnackBar();
@@ -84,10 +91,10 @@ export const CreateProfile = () => {
     async (data) => {
       try {
         if (!currentWorkspaceMember?.id) {
-          throw new Error('User is not logged in');
+          throw new Error(t('User is not logged in'));
         }
         if (!data.firstName || !data.lastName) {
-          throw new Error('First name or last name is missing');
+          throw new Error(t('First name or last name is missing'));
         }
 
         await updateOneRecord({
@@ -145,20 +152,20 @@ export const CreateProfile = () => {
   if (onboardingStatus !== OnboardingStatus.ProfileCreation) {
     return null;
   }
-
+  
   return (
     <>
-      <Title noMarginTop>Create profile</Title>
-      <SubTitle>How you'll be identified on the app.</SubTitle>
+      <Title noMarginTop>{t('Create profile')}</Title>
+      <SubTitle>{t("How you'll be identified on the app.")}</SubTitle>
       <StyledContentContainer>
         <StyledSectionContainer>
-          <H2Title title="Picture" />
+          <H2Title title={t('Picture')} />
           <ProfilePictureUploader />
         </StyledSectionContainer>
         <StyledSectionContainer>
           <H2Title
-            title="Name"
-            description="Your name as it will be displayed on the app"
+            title={t('Name')}
+            description={t('Your name as it will be displayed on the app')}
           />
           {/* TODO: When react-web-hook-form is added to edit page we should create a dedicated component with context */}
           <StyledComboInputContainer>
@@ -171,7 +178,7 @@ export const CreateProfile = () => {
               }) => (
                 <TextInputV2
                   autoFocus
-                  label="First Name"
+                  label={t('First Name')}
                   value={value}
                   onFocus={() => setIsEditingMode(true)}
                   onBlur={() => {
@@ -179,7 +186,7 @@ export const CreateProfile = () => {
                     setIsEditingMode(false);
                   }}
                   onChange={onChange}
-                  placeholder="Tim"
+                  placeholder={t('Tim')}
                   error={error?.message}
                   fullWidth
                 />
@@ -193,7 +200,7 @@ export const CreateProfile = () => {
                 fieldState: { error },
               }) => (
                 <TextInputV2
-                  label="Last Name"
+                  label={t('Last Name')}
                   value={value}
                   onFocus={() => setIsEditingMode(true)}
                   onBlur={() => {
@@ -201,7 +208,7 @@ export const CreateProfile = () => {
                     setIsEditingMode(false);
                   }}
                   onChange={onChange}
-                  placeholder="Cook"
+                  placeholder={t('Cook')}
                   error={error?.message}
                   fullWidth
                 />
@@ -212,7 +219,7 @@ export const CreateProfile = () => {
       </StyledContentContainer>
       <StyledButtonContainer>
         <MainButton
-          title="Continue"
+          title={t('Continue')}
           onClick={handleSubmit(onSubmit)}
           disabled={!isValid || isSubmitting}
           fullWidth

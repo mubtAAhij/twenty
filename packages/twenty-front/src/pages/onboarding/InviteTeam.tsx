@@ -11,22 +11,23 @@ import { useScopedHotkeys } from '@/ui/utilities/hotkey/hooks/useScopedHotkeys';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useI18n } from '@quetzallabs/i18n';
 import { useCallback } from 'react';
 import {
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-  useForm,
+    Controller,
+    SubmitHandler,
+    useFieldArray,
+    useForm,
 } from 'react-hook-form';
 import { useRecoilValue } from 'recoil';
 import { Key } from 'ts-key-enum';
 import {
-  ActionLink,
-  AnimatedTranslation,
-  IconCopy,
-  LightButton,
-  MainButton,
-  SeparatorLineText,
+    ActionLink,
+    AnimatedTranslation,
+    IconCopy,
+    LightButton,
+    MainButton,
+    SeparatorLineText,
 } from 'twenty-ui';
 import { z } from 'zod';
 
@@ -61,13 +62,16 @@ const StyledActionSkipLinkContainer = styled.div`
 
 const validationSchema = z.object({
   emails: z.array(
-    z.object({ email: z.union([z.literal(''), z.string().email()]) }),
+    z.object({
+      email: z.union([z.literal(''), z.string().email()]),
+    }),
   ),
 });
 
 type FormInput = z.infer<typeof validationSchema>;
 
 export const InviteTeam = () => {
+  const { t } = useI18n();
   const theme = useTheme();
   const { enqueueSnackBar } = useSnackBar();
   const { sendInvitation } = useCreateWorkspaceInvitation();
@@ -83,7 +87,17 @@ export const InviteTeam = () => {
   } = useForm<FormInput>({
     mode: 'onChange',
     defaultValues: {
-      emails: [{ email: '' }, { email: '' }, { email: '' }],
+      emails: [
+        {
+          email: '',
+        },
+        {
+          email: '',
+        },
+        {
+          email: '',
+        },
+      ],
     },
     resolver: zodResolver(validationSchema),
   });
@@ -99,7 +113,9 @@ export const InviteTeam = () => {
     }
     const emailValues = emails.map((email) => email?.email);
     if (emailValues[emailValues.length - 1] !== '') {
-      append({ email: '' });
+      append({
+        email: '',
+      });
     }
     if (emailValues.length > 3 && emailValues[emailValues.length - 2] === '') {
       remove(emailValues.length - 1);
@@ -123,7 +139,7 @@ export const InviteTeam = () => {
     if (isDefined(currentWorkspace?.inviteHash)) {
       const inviteLink = `${window.location.origin}/invite/${currentWorkspace?.inviteHash}`;
       navigator.clipboard.writeText(inviteLink);
-      enqueueSnackBar('Link copied to clipboard', {
+      enqueueSnackBar(t('Link copied to clipboard'), {
         variant: SnackBarVariant.Success,
         icon: <IconCopy size={theme.icon.size.md} />,
         duration: 2000,
@@ -140,15 +156,16 @@ export const InviteTeam = () => {
             .filter((email) => email.length > 0),
         ),
       );
-      const result = await sendInvitation({ emails });
-
+      const result = await sendInvitation({
+        emails,
+      });
       setNextOnboardingStatus();
 
       if (isDefined(result.errors)) {
         throw result.errors;
       }
       if (emails.length > 0) {
-        enqueueSnackBar('Invite link sent to email addresses', {
+        enqueueSnackBar(t('Invite link sent to email addresses'), {
           variant: SnackBarVariant.Success,
           duration: 2000,
         });
@@ -158,7 +175,9 @@ export const InviteTeam = () => {
   );
 
   const handleSkip = async () => {
-    await onSubmit({ emails: [] });
+    await onSubmit({
+      emails: [],
+    });
   };
 
   useScopedHotkeys(
@@ -173,12 +192,12 @@ export const InviteTeam = () => {
   if (currentUser?.onboardingStatus !== OnboardingStatus.InviteTeam) {
     return <></>;
   }
-
+  
   return (
     <>
-      <Title noMarginTop>Invite your team</Title>
+      <Title noMarginTop>{t('Invite your team')}</Title>
       <SubTitle>
-        Get the most out of your workspace by inviting your team.
+        {t('Get the most out of your workspace by inviting your team.')}
       </SubTitle>
       <StyledAnimatedContainer>
         {fields.map((_field, index) => (
@@ -208,10 +227,10 @@ export const InviteTeam = () => {
         ))}
         {isDefined(currentWorkspace?.inviteHash) && (
           <>
-            <SeparatorLineText>Or</SeparatorLineText>
+            <SeparatorLineText>{t('Or')}</SeparatorLineText>
             <StyledActionLinkContainer>
               <LightButton
-                title="Copy invitation link"
+                title={t('Copy invitation link')}
                 accent="tertiary"
                 onClick={copyInviteLink}
                 Icon={IconCopy}
@@ -222,14 +241,14 @@ export const InviteTeam = () => {
       </StyledAnimatedContainer>
       <StyledButtonContainer>
         <MainButton
-          title="Finish"
+          title={t('Finish')}
           disabled={!isValid || isSubmitting}
           onClick={handleSubmit(onSubmit)}
           fullWidth
         />
       </StyledButtonContainer>
       <StyledActionSkipLinkContainer>
-        <ActionLink onClick={handleSkip}>Skip</ActionLink>
+        <ActionLink onClick={handleSkip}>{t('Skip')}</ActionLink>
       </StyledActionSkipLinkContainer>
     </>
   );

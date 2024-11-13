@@ -21,6 +21,7 @@ import { View } from '@/views/types/View';
 import { ViewType } from '@/views/types/ViewType';
 import { useApolloClient } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useI18n } from '@quetzallabs/i18n';
 import pick from 'lodash.pick';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -39,6 +40,7 @@ type SettingsDataModelNewFieldFormValues = z.infer<
 const DEFAULT_ICON_FOR_NEW_FIELD = 'IconUsers';
 
 export const SettingsObjectNewFieldConfigure = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const { objectSlug = '' } = useParams();
   const [searchParams] = useSearchParams();
@@ -83,8 +85,12 @@ export const SettingsObjectNewFieldConfigure = () => {
   useFindManyRecords<View>({
     objectNameSingular: CoreObjectNameSingular.View,
     filter: {
-      type: { eq: ViewType.Table },
-      objectMetadataId: { eq: activeObjectMetadataItem?.id },
+      type: {
+        eq: ViewType.Table,
+      },
+      objectMetadataId: {
+        eq: activeObjectMetadataItem?.id,
+      },
     },
     onCompleted: async (views) => {
       if (isUndefinedOrNull(views)) return;
@@ -100,8 +106,12 @@ export const SettingsObjectNewFieldConfigure = () => {
     objectNameSingular: CoreObjectNameSingular.View,
     skip: !relationObjectMetadataId,
     filter: {
-      type: { eq: ViewType.Table },
-      objectMetadataId: { eq: relationObjectMetadataId },
+      type: {
+        eq: ViewType.Table,
+      },
+      objectMetadataId: {
+        eq: relationObjectMetadataId,
+      },
     },
     onCompleted: async (views) => {
       if (isUndefinedOrNull(views)) return;
@@ -165,23 +175,30 @@ export const SettingsObjectNewFieldConfigure = () => {
     }
   };
   if (!activeObjectMetadataItem) return null;
-
+  
   return (
     <RecordFieldValueSelectorContextProvider>
       <FormProvider // eslint-disable-next-line react/jsx-props-no-spreading
         {...formConfig}
       >
         <SubMenuTopBarContainer
-          title="2. Configure field"
+          title={t('2. Configure field')}
           links={[
-            { children: 'Workspace', href: '/settings/workspace' },
-            { children: 'Objects', href: '/settings/objects' },
+            {
+              children: t('Workspace'),
+              href: '/settings/workspace',
+            },
+            {
+              children: t('Objects'),
+              href: '/settings/objects',
+            },
             {
               children: activeObjectMetadataItem.labelPlural,
               href: `/settings/objects/${objectSlug}`,
             },
-
-            { children: <SettingsDataModelNewFieldBreadcrumbDropDown /> },
+            {
+              children: <SettingsDataModelNewFieldBreadcrumbDropDown />,
+            },
           ]}
           actionButton={
             <SaveAndCancelButtons
@@ -199,20 +216,23 @@ export const SettingsObjectNewFieldConfigure = () => {
           <SettingsPageContainer>
             <Section>
               <H2Title
-                title="Icon and Name"
-                description="The name and icon of this field"
+                title={t('Icon and Name')}
+                description={t('The name and icon of this field')}
               />
               <SettingsDataModelFieldIconLabelForm
                 maxLength={FIELD_NAME_MAXIMUM_LENGTH}
               />
             </Section>
             <Section>
-              <H2Title title="Values" description="The values of this field" />
+              <H2Title
+                title={t('Values')}
+                description={t('The values of this field')}
+              />
               <SettingsDataModelFieldSettingsFormCard
                 isCreatingField
                 fieldMetadataItem={{
                   icon: formConfig.watch('icon'),
-                  label: formConfig.watch('label') || 'New Field',
+                  label: formConfig.watch('label') || t('New Field'),
                   type: fieldType as FieldMetadataType,
                 }}
                 objectMetadataItem={activeObjectMetadataItem}
@@ -220,8 +240,8 @@ export const SettingsObjectNewFieldConfigure = () => {
             </Section>
             <Section>
               <H2Title
-                title="Description"
-                description="The description of this field"
+                title={t('Description')}
+                description={t('The description of this field')}
               />
               <SettingsDataModelFieldDescriptionForm />
             </Section>

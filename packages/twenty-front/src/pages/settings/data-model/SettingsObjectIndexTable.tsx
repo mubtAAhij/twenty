@@ -10,6 +10,7 @@ import { TableRow } from '@/ui/layout/table/components/TableRow';
 import { useSortedArray } from '@/ui/layout/table/hooks/useSortedArray';
 import { TableMetadata } from '@/ui/layout/table/types/TableMetadata';
 import styled from '@emotion/styled';
+import { useI18n } from '@quetzallabs/i18n';
 import { isNonEmptyArray } from '@sniptt/guards';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -20,40 +21,11 @@ export const StyledObjectIndexTableRow = styled(TableRow)`
   grid-template-columns: 350px 70px 80px;
 `;
 
-const SETTINGS_OBJECT_DETAIL_TABLE_METADATA_STANDARD: TableMetadata<SettingsObjectIndexesTableItem> =
-  {
-    tableId: 'settingsObjectIndexs',
-    fields: [
-      {
-        fieldLabel: 'Fields',
-        fieldName: 'indexFields',
-        fieldType: 'string',
-        align: 'left',
-      },
-      {
-        fieldLabel: '',
-        FieldIcon: IconSquareKey,
-        fieldName: 'isUnique',
-        fieldType: 'string',
-        align: 'left',
-      },
-      {
-        fieldLabel: 'Type',
-        fieldName: 'indexType',
-        fieldType: 'string',
-        align: 'right',
-      },
-    ],
-    initialSort: {
-      fieldName: 'name',
-      orderBy: 'AscNullsLast',
-    },
-  };
-
 const StyledSearchInput = styled(TextInput)`
   padding-bottom: ${({ theme }) => theme.spacing(2)};
   width: 100%;
 `;
+
 export type SettingsObjectIndexTableProps = {
   objectMetadataItem: ObjectMetadataItem;
 };
@@ -61,6 +33,37 @@ export type SettingsObjectIndexTableProps = {
 export const SettingsObjectIndexTable = ({
   objectMetadataItem,
 }: SettingsObjectIndexTableProps) => {
+  const { t } = useI18n();
+  const SETTINGS_OBJECT_DETAIL_TABLE_METADATA_STANDARD: TableMetadata<SettingsObjectIndexesTableItem> =
+    {
+      tableId: 'settingsObjectIndexs',
+      fields: [
+        {
+          fieldLabel: t('Fields'),
+          fieldName: 'indexFields',
+          fieldType: 'string',
+          align: 'left',
+        },
+        {
+          fieldLabel: '',
+          FieldIcon: IconSquareKey,
+          fieldName: 'isUnique',
+          fieldType: 'string',
+          align: 'left',
+        },
+        {
+          fieldLabel: t('Type'),
+          fieldName: 'indexType',
+          fieldType: 'string',
+          align: 'right',
+        },
+      ],
+      initialSort: {
+        fieldName: 'name',
+        orderBy: 'AscNullsLast',
+      },
+    };
+
   const [searchTerm, setSearchTerm] = useState('');
 
   const [settingsObjectIndexes, setSettingsObjectIndexes] = useRecoilState(
@@ -107,12 +110,12 @@ export const SettingsObjectIndexTable = ({
       ),
     [sortedActiveObjectSettingsDetailItems, searchTerm],
   );
-
+  
   return (
     <>
       <StyledSearchInput
         LeftIcon={IconSearch}
-        placeholder="Search an index..."
+        placeholder={t('Search an index...')}
         value={searchTerm}
         onChange={setSearchTerm}
       />

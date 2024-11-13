@@ -12,11 +12,13 @@ import { SnackBarVariant } from '@/ui/feedback/snack-bar-manager/components/Snac
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useI18n } from '@quetzallabs/i18n';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 export const SettingsSecuritySSOIdentifyProvider = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
 
   const { enqueueSnackBar } = useSnackBar();
@@ -26,7 +28,10 @@ export const SettingsSecuritySSOIdentifyProvider = () => {
     mode: 'onChange',
     resolver: zodResolver(SSOIdentitiesProvidersParamsSchema),
     defaultValues: Object.values(sSOIdentityProviderDefaultValues).reduce(
-      (acc, fn) => ({ ...acc, ...fn() }),
+      (acc, fn) => ({
+        ...acc,
+        ...fn(),
+      }),
       {},
     ),
   });
@@ -52,10 +57,10 @@ export const SettingsSecuritySSOIdentifyProvider = () => {
       });
     }
   };
-
+  
   return (
     <SubMenuTopBarContainer
-      title="New SSO Configuration"
+      title={t('New SSO Configuration')}
       actionButton={
         <SaveAndCancelButtons
           isSaveDisabled={!formConfig.formState.isValid}
@@ -65,14 +70,16 @@ export const SettingsSecuritySSOIdentifyProvider = () => {
       }
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
         {
-          children: 'Security',
+          children: t('Security'),
           href: getSettingsPagePath(SettingsPath.Security),
         },
-        { children: 'New' },
+        {
+          children: t('New'),
+        },
       ]}
     >
       <FormProvider

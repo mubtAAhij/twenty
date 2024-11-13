@@ -4,19 +4,23 @@ import { useSettingsIntegrationCategories } from '@/settings/integrations/hooks/
 import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 
 export const SettingsIntegrations = () => {
+  const { t } = useI18n();
   const integrationCategories = useSettingsIntegrationCategories();
-
+  
   return (
     <SubMenuTopBarContainer
-      title="Integrations"
+      title={t('Integrations')}
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
-        { children: 'Integrations' },
+        {
+          children: t('Integrations'),
+        },
       ]}
     >
       <SettingsPageContainer>

@@ -9,40 +9,50 @@ import { ProfilePictureUploader } from '@/settings/profile/components/ProfilePic
 import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 
-export const SettingsProfile = () => (
-  <SubMenuTopBarContainer
-    title="Profile"
-    links={[
-      {
-        children: 'User',
-        href: getSettingsPagePath(SettingsPath.ProfilePage),
-      },
-      { children: 'Profile' },
-    ]}
-  >
-    <SettingsPageContainer>
-      <Section>
-        <H2Title title="Picture" />
-        <ProfilePictureUploader />
-      </Section>
-      <Section>
-        <H2Title title="Name" description="Your name as it will be displayed" />
-        <NameFields />
-      </Section>
-      <Section>
-        <H2Title
-          title="Email"
-          description="The email associated to your account"
-        />
-        <EmailField />
-      </Section>
-      <Section>
-        <ChangePassword />
-      </Section>
-      <Section>
-        <DeleteAccount />
-      </Section>
-    </SettingsPageContainer>
-  </SubMenuTopBarContainer>
-);
+export const SettingsProfile = () => {
+  const { t } = useI18n();
+  return (
+    <SubMenuTopBarContainer
+      title={t('Profile')}
+      links={[
+        {
+          children: t('User'),
+          href: getSettingsPagePath(SettingsPath.ProfilePage),
+        },
+        {
+          children: t('Profile'),
+        },
+      ]}
+    >
+      <SettingsPageContainer>
+        <Section>
+          <H2Title title={t('Picture')} />
+          <ProfilePictureUploader />
+        </Section>
+        <Section>
+          <H2Title
+            title={t('Name')}
+            description={t('Your name as it will be displayed')}
+          />
+          <NameFields />
+        </Section>
+        <Section>
+          <H2Title
+            title={t('Email')}
+            description={t('The email associated to your account')}
+          />
+          <EmailField />
+        </Section>
+        <Section>
+          <ChangePassword />
+        </Section>
+        <Section>
+          <DeleteAccount />
+        </Section>
+      </SettingsPageContainer>
+    </SubMenuTopBarContainer>
+  );
+};
+

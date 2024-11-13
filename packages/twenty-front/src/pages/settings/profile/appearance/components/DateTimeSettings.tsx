@@ -13,9 +13,10 @@ import { detectTimeFormat } from '@/localization/utils/detectTimeFormat';
 import { detectTimeZone } from '@/localization/utils/detectTimeZone';
 import { getWorkspaceDateFormatFromDateFormat } from '@/localization/utils/getWorkspaceDateFormatFromDateFormat';
 import { getWorkspaceTimeFormatFromTimeFormat } from '@/localization/utils/getWorkspaceTimeFormatFromTimeFormat';
+import { useI18n } from '@quetzallabs/i18n';
 import {
-  WorkspaceMemberDateFormatEnum,
-  WorkspaceMemberTimeFormatEnum,
+    WorkspaceMemberDateFormatEnum,
+    WorkspaceMemberTimeFormatEnum,
 } from '~/generated/graphql';
 import { DateTimeSettingsDateFormatSelect } from '~/pages/settings/profile/appearance/components/DateTimeSettingsDateFormatSelect';
 import { DateTimeSettingsTimeFormatSelect } from '~/pages/settings/profile/appearance/components/DateTimeSettingsTimeFormatSelect';
@@ -31,6 +32,7 @@ const StyledContainer = styled.div`
 `;
 
 export const DateTimeSettings = () => {
+  const { t } = useI18n();
   const [currentWorkspaceMember, setCurrentWorkspaceMember] = useRecoilState(
     currentWorkspaceMemberState,
   );
@@ -43,7 +45,7 @@ export const DateTimeSettings = () => {
 
   const updateWorkspaceMember = async (changedFields: any) => {
     if (!currentWorkspaceMember?.id) {
-      throw new Error('User is not logged in');
+      throw new Error(t('User is not logged in'));
     }
 
     try {
@@ -123,7 +125,7 @@ export const DateTimeSettings = () => {
     currentWorkspaceMember.timeFormat === WorkspaceMemberTimeFormatEnum.System
       ? TimeFormat.SYSTEM
       : dateTimeFormat.timeFormat;
-
+      
   return (
     <StyledContainer>
       <DateTimeSettingsTimeZoneSelect

@@ -13,6 +13,7 @@ import { isDefaultLayoutAuthModalVisibleState } from '@/ui/layout/states/isDefau
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useI18n } from '@quetzallabs/i18n';
 import { isNonEmptyString } from '@sniptt/guards';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
@@ -23,21 +24,10 @@ import { useSetRecoilState } from 'recoil';
 import { AnimatedEaseIn, MainButton } from 'twenty-ui';
 import { z } from 'zod';
 import {
-  useUpdatePasswordViaResetTokenMutation,
-  useValidatePasswordResetTokenQuery,
+    useUpdatePasswordViaResetTokenMutation,
+    useValidatePasswordResetTokenQuery,
 } from '~/generated/graphql';
 import { logError } from '~/utils/logError';
-
-const validationSchema = z
-  .object({
-    passwordResetToken: z.string(),
-    newPassword: z
-      .string()
-      .regex(PASSWORD_REGEX, 'Password must contain at least 8 characters'),
-  })
-  .required();
-
-type Form = z.infer<typeof validationSchema>;
 
 const StyledMainContainer = styled.div`
   display: flex;
@@ -69,6 +59,19 @@ const StyledInputContainer = styled.div`
 `;
 
 export const PasswordReset = () => {
+  const { t } = useI18n();
+  const validationSchema = z
+    .object({
+      passwordResetToken: z.string(),
+      newPassword: z
+        .string()
+        .regex(
+          PASSWORD_REGEX,
+          t('Password must contain at least 8 characters'),
+        ),
+    })
+    .required();
+  type Form = z.infer<typeof validationSchema>;
   const { enqueueSnackBar } = useSnackBar();
 
   const navigate = useNavigate();
@@ -100,7 +103,7 @@ export const PasswordReset = () => {
     },
     skip: !passwordResetToken,
     onError: (error) => {
-      enqueueSnackBar(error?.message ?? 'Token Invalid', {
+      enqueueSnackBar(error?.message ?? t('Token Invalid'), {
         variant: SnackBarVariant.Error,
       });
       navigate(AppPath.Index);
@@ -130,14 +133,14 @@ export const PasswordReset = () => {
       });
 
       if (!data?.updatePasswordViaResetToken.success) {
-        enqueueSnackBar('There was an error while updating password.', {
+        enqueueSnackBar(t('There was an error while updating password.'), {
           variant: SnackBarVariant.Error,
         });
         return;
       }
 
       if (isLoggedIn) {
-        enqueueSnackBar('Password has been updated', {
+        enqueueSnackBar(t('Password has been updated'), {
           variant: SnackBarVariant.Success,
         });
         navigate(AppPath.Index);
@@ -151,21 +154,22 @@ export const PasswordReset = () => {
     } catch (err) {
       logError(err);
       enqueueSnackBar(
-        (err as Error)?.message || 'An error occurred while updating password',
+        (err as Error)?.message ||
+          t('An error occurred while updating password'),
         {
           variant: SnackBarVariant.Error,
         },
       );
     }
   };
-
+  
   return (
     isTokenValid && (
       <StyledMainContainer>
         <AnimatedEaseIn>
           <Logo />
         </AnimatedEaseIn>
-        <Title animate>Reset Password</Title>
+        <Title animate>{t('Reset Password')}</Title>
         <StyledContentContainer>
           {!email ? (
             <SkeletonTheme
@@ -183,8 +187,14 @@ export const PasswordReset = () => {
           ) : (
             <StyledForm onSubmit={handleSubmit(onSubmit)}>
               <StyledFullWidthMotionDiv
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                initial={{
+                  opacity: 0,
+                  height: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                  height: 'auto',
+                }}
                 transition={{
                   type: 'spring',
                   stiffness: 800,
@@ -195,15 +205,21 @@ export const PasswordReset = () => {
                   <TextInputV2
                     autoFocus
                     value={email}
-                    placeholder="Email"
+                    placeholder={t('Email')}
                     fullWidth
                     disabled
                   />
                 </StyledInputContainer>
               </StyledFullWidthMotionDiv>
               <StyledFullWidthMotionDiv
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                initial={{
+                  opacity: 0,
+                  height: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                  height: 'auto',
+                }}
                 transition={{
                   type: 'spring',
                   stiffness: 800,
@@ -222,7 +238,7 @@ export const PasswordReset = () => {
                         autoFocus
                         value={value}
                         type="password"
-                        placeholder="New Password"
+                        placeholder={t('New Password')}
                         onBlur={onBlur}
                         onChange={onChange}
                         error={error?.message}
@@ -235,7 +251,7 @@ export const PasswordReset = () => {
 
               <MainButton
                 variant="secondary"
-                title="Change Password"
+                title={t('Change Password')}
                 type="submit"
                 fullWidth
                 disabled={isUpdatingPassword}

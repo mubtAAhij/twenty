@@ -3,21 +3,25 @@ import { SettingsIntegrationEditDatabaseConnectionContainer } from '@/settings/i
 import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 
 export const SettingsIntegrationEditDatabaseConnection = () => {
+  const { t } = useI18n();
   return (
     <SubMenuTopBarContainer
-      title="Edit connection"
+      title={t('Edit connection')}
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
         {
-          children: 'Integrations',
+          children: t('Integrations'),
           href: getSettingsPagePath(SettingsPath.Integrations),
         },
-        { children: 'Edit connection' },
+        {
+          children: t('Edit connection'),
+        },
       ]}
     >
       <SettingsPageContainer>

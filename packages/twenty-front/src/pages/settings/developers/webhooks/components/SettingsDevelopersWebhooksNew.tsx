@@ -11,9 +11,11 @@ import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { TextInput } from '@/ui/input/components/TextInput';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 import { isValidUrl } from '~/utils/url/isValidUrl';
 
 export const SettingsDevelopersWebhooksNew = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState<{
     targetUrl: string;
@@ -62,20 +64,22 @@ export const SettingsDevelopersWebhooksNew = () => {
     }));
     handleValidate(value);
   };
-
+  
   return (
     <SubMenuTopBarContainer
-      title="New Webhook"
+      title={t('New Webhook')}
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
         {
-          children: 'Developers',
+          children: t('Developers'),
           href: getSettingsPagePath(SettingsPath.Developers),
         },
-        { children: 'New Webhook' },
+        {
+          children: t('New Webhook'),
+        },
       ]}
       actionButton={
         <SaveAndCancelButtons
@@ -90,13 +94,17 @@ export const SettingsDevelopersWebhooksNew = () => {
       <SettingsPageContainer>
         <Section>
           <H2Title
-            title="Endpoint URL"
-            description="We will send POST requests to this endpoint for every new event"
+            title={t('Endpoint URL')}
+            description={t(
+              'We will send POST requests to this endpoint for every new event',
+            )}
           />
           <TextInput
-            placeholder="URL"
+            placeholder={t('URL')}
             value={formValues.targetUrl}
-            error={!isTargetUrlValid ? 'Please enter a valid URL' : undefined}
+            error={
+              !isTargetUrlValid ? t('Please enter a valid URL') : undefined
+            }
             onKeyDown={handleKeyDown}
             onChange={handleChange}
             fullWidth

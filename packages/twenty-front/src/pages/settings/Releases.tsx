@@ -11,6 +11,7 @@ import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
 import { ScrollWrapper } from '@/ui/utilities/scroll/components/ScrollWrapper';
+import { useI18n } from '@quetzallabs/i18n';
 
 type ReleaseNote = {
   slug: string;
@@ -79,6 +80,7 @@ const StyledReleaseDate = styled.span`
 `;
 
 export const Releases = () => {
+  const { t } = useI18n();
   const [releases, setReleases] = useState<ReleaseNote[]>([]);
 
   useEffect(() => {
@@ -103,17 +105,17 @@ export const Releases = () => {
       setReleases(json);
     });
   }, []);
-
+  
   return (
     <SubMenuTopBarContainer
-      title="Releases"
+      title={t('Releases')}
       links={[
         {
-          children: 'Others',
+          children: t('Others'),
           href: getSettingsPagePath(SettingsPath.Releases),
         },
         {
-          children: 'Releases',
+          children: t('Releases'),
         },
       ]}
     >
@@ -124,7 +126,11 @@ export const Releases = () => {
               <React.Fragment key={release.slug}>
                 <StyledReleaseHeader>{release.release}</StyledReleaseHeader>
                 <StyledReleaseDate>{release.date}</StyledReleaseDate>
-                <div dangerouslySetInnerHTML={{ __html: release.html }}></div>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: release.html,
+                  }}
+                ></div>
               </React.Fragment>
             ))}
           </StyledReleaseContainer>

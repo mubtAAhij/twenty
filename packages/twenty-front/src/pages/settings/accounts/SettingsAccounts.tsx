@@ -15,8 +15,10 @@ import { SettingsPageContainer } from '@/settings/components/SettingsPageContain
 import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 
 export const SettingsAccounts = () => {
+  const { t } = useI18n();
   const currentWorkspaceMember = useRecoilValue(currentWorkspaceMemberState);
 
   const { objectMetadataItem } = useObjectMetadataItem({
@@ -30,18 +32,22 @@ export const SettingsAccounts = () => {
         eq: currentWorkspaceMember?.id,
       },
     },
-    recordGqlFields: generateDepthOneRecordGqlFields({ objectMetadataItem }),
+    recordGqlFields: generateDepthOneRecordGqlFields({
+      objectMetadataItem,
+    }),
   });
-
+  
   return (
     <SubMenuTopBarContainer
-      title="Account"
+      title={t('Account')}
       links={[
         {
-          children: 'User',
+          children: t('User'),
           href: getSettingsPagePath(SettingsPath.ProfilePage),
         },
-        { children: 'Account' },
+        {
+          children: t('Account'),
+        },
       ]}
     >
       <SettingsPageContainer>
@@ -51,8 +57,8 @@ export const SettingsAccounts = () => {
           <>
             <Section>
               <H2Title
-                title="Connected accounts"
-                description="Manage your internet accounts."
+                title={t('Connected accounts')}
+                description={t('Manage your internet accounts.')}
               />
               <SettingsAccountsConnectedAccountsListCard
                 accounts={accounts}

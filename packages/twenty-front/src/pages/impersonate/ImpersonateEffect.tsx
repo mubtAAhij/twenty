@@ -7,10 +7,12 @@ import { useIsLogged } from '@/auth/hooks/useIsLogged';
 import { currentUserState } from '@/auth/states/currentUserState';
 import { tokenPairState } from '@/auth/states/tokenPairState';
 import { AppPath } from '@/types/AppPath';
+import { useI18n } from '@quetzallabs/i18n';
 import { useImpersonateMutation } from '~/generated/graphql';
 import { isDefined } from '~/utils/isDefined';
 
 export const ImpersonateEffect = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const { userId } = useParams();
 
@@ -27,7 +29,9 @@ export const ImpersonateEffect = () => {
     }
 
     const impersonateResult = await impersonate({
-      variables: { userId },
+      variables: {
+        userId,
+      },
     });
 
     if (isDefined(impersonateResult.errors)) {
@@ -35,7 +39,7 @@ export const ImpersonateEffect = () => {
     }
 
     if (!impersonateResult.data?.impersonate) {
-      throw new Error('No impersonate result');
+      throw new Error(t('No impersonate result'));
     }
 
     setCurrentUser({

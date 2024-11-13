@@ -8,12 +8,14 @@ import { SignInUpMode, useSignInUp } from '@/auth/sign-in-up/hooks/useSignInUp';
 import { useSignInUpForm } from '@/auth/sign-in-up/hooks/useSignInUpForm';
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { SignInUpStep } from '@/auth/states/signInUpStepState';
+import { useI18n } from '@quetzallabs/i18n';
 import { IconLockCustom } from '@ui/display/icon/components/IconLock';
 import { AnimatedEaseIn } from 'twenty-ui';
 import { isDefined } from '~/utils/isDefined';
 import { SSOWorkspaceSelection } from './SSOWorkspaceSelection';
 
 export const SignInUp = () => {
+  const { t } = useI18n();
   const { form } = useSignInUpForm();
   const currentWorkspace = useRecoilValue(currentWorkspaceState);
 
@@ -24,20 +26,20 @@ export const SignInUp = () => {
       signInUpStep === SignInUpStep.Init ||
       signInUpStep === SignInUpStep.Email
     ) {
-      return 'Welcome to Twenty';
+      return t('Welcome to Twenty');
     }
     if (signInUpStep === SignInUpStep.SSOWorkspaceSelection) {
-      return 'Choose SSO connection';
+      return t('Choose SSO connection');
     }
     return signInUpMode === SignInUpMode.SignIn
-      ? 'Sign in to Twenty'
-      : 'Sign up to Twenty';
+      ? t('Sign in to Twenty')
+      : t('Sign up to Twenty');
   }, [signInUpMode, signInUpStep]);
 
   if (isDefined(currentWorkspace)) {
     return <></>;
   }
-
+  
   return (
     <>
       <AnimatedEaseIn>

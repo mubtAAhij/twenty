@@ -12,8 +12,10 @@ import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { AppPath } from '@/types/AppPath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 
 export const SettingsIntegrationDatabase = () => {
+  const { t } = useI18n();
   const { databaseKey = '' } = useParams();
   const navigate = useNavigate();
 
@@ -38,20 +40,22 @@ export const SettingsIntegrationDatabase = () => {
   });
 
   if (!isIntegrationAvailable) return null;
-
+  
   return (
     <SubMenuTopBarContainer
       title={integration.text}
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
         {
-          children: 'Integrations',
+          children: t('Integrations'),
           href: getSettingsPagePath(SettingsPath.Integrations),
         },
-        { children: integration.text },
+        {
+          children: integration.text,
+        },
       ]}
     >
       <SettingsPageContainer>
@@ -60,8 +64,12 @@ export const SettingsIntegrationDatabase = () => {
         />
         <Section>
           <H2Title
-            title={`${integration.text} database`}
-            description={`Connect or access your ${integration.text} data`}
+            title={t('{dynamic1} database', {
+              dynamic1: integration.text,
+            })}
+            description={t('Connect or access your {dynamic1} data', {
+              dynamic1: integration.text,
+            })}
           />
           <SettingsIntegrationDatabaseConnectionsListCard
             integration={integration}

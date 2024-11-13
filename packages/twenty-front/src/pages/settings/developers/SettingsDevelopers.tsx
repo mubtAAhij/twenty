@@ -7,6 +7,7 @@ import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import styled from '@emotion/styled';
+import { useI18n } from '@quetzallabs/i18n';
 import { Button, H2Title, IconPlus, MOBILE_VIEWPORT, Section } from 'twenty-ui';
 
 const StyledButtonContainer = styled.div`
@@ -18,7 +19,9 @@ const StyledButtonContainer = styled.div`
   }
 `;
 
-const StyledContainer = styled.div<{ isMobile: boolean }>`
+const StyledContainer = styled.div<{
+  isMobile: boolean;
+}>`
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -26,31 +29,34 @@ const StyledContainer = styled.div<{ isMobile: boolean }>`
 `;
 
 export const SettingsDevelopers = () => {
+  const { t } = useI18n();
   const isMobile = useIsMobile();
   return (
     <SubMenuTopBarContainer
-      title="Developers"
+      title={t('Developers')}
       actionButton={<SettingsReadDocumentationButton />}
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
-        { children: 'Developers' },
+        {
+          children: t('Developers'),
+        },
       ]}
     >
       <SettingsPageContainer>
         <StyledContainer isMobile={isMobile}>
           <Section>
             <H2Title
-              title="API keys"
-              description="Active APIs keys created by you or your team."
+              title={t('API keys')}
+              description={t('Active APIs keys created by you or your team.')}
             />
             <SettingsApiKeysTable />
             <StyledButtonContainer>
               <Button
                 Icon={IconPlus}
-                title="Create API key"
+                title={t('Create API key')}
                 size="small"
                 variant="secondary"
                 to={'/settings/developers/api-keys/new'}
@@ -59,14 +65,16 @@ export const SettingsDevelopers = () => {
           </Section>
           <Section>
             <H2Title
-              title="Webhooks"
-              description="Establish Webhook endpoints for notifications on asynchronous events."
+              title={t('Webhooks')}
+              description={t(
+                'Establish Webhook endpoints for notifications on asynchronous events.',
+              )}
             />
             <SettingsWebhooksTable />
             <StyledButtonContainer>
               <Button
                 Icon={IconPlus}
-                title="Create Webhook"
+                title={t('Create Webhook')}
                 size="small"
                 variant="secondary"
                 to={'/settings/developers/webhooks/new'}

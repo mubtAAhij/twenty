@@ -1,14 +1,16 @@
 import { AppPath } from '@/types/AppPath';
 import styled from '@emotion/styled';
+import { useI18n } from '@quetzallabs/i18n';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
 import { MainButton, UndecoratedLink } from 'twenty-ui';
 import { useAuthorizeAppMutation } from '~/generated/graphql';
 import { isDefined } from '~/utils/isDefined';
-
-type App = { id: string; name: string; logo: string };
-
+type App = {
+  id: string;
+  name: string;
+  logo: string;
+};
 const StyledContainer = styled.div`
   display: flex;
   align-items: center;
@@ -53,13 +55,14 @@ const StyledButtonContainer = styled.div`
   width: 100%;
 `;
 export const Authorize = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [searchParam] = useSearchParams();
   //TODO: Replace with db call for registered third party apps
   const [apps] = useState<App[]>([
     {
       id: 'chrome',
-      name: 'Chrome Extension',
+      name: t('Chrome Extension'),
       logo: 'images/integrations/chrome-icon.svg',
     },
   ]);
@@ -94,31 +97,39 @@ export const Authorize = () => {
       });
     }
   };
-
+  
   return (
     <StyledContainer>
       <StyledCardWrapper>
         <StyledAppsContainer>
           <img
             src="/images/integrations/twenty-logo.svg"
-            alt="twenty-icon"
+            alt={t('twenty-icon')}
             height={40}
             width={40}
           />
           <img
             src="/images/integrations/link-apps.svg"
-            alt="link-icon"
+            alt={t('link-icon')}
             height={60}
             width={60}
           />
-          <img src={app?.logo} alt="app-icon" height={40} width={40} />
+          <img src={app?.logo} alt={t('app-icon')} height={40} width={40} />
         </StyledAppsContainer>
-        <StyledText>{app?.name} wants to access your account</StyledText>
+        <StyledText>
+          {t('{dynamic1} wants to access your account', {
+            dynamic1: app?.name,
+          })}
+        </StyledText>
         <StyledButtonContainer>
           <UndecoratedLink to={AppPath.Index}>
-            <MainButton title="Cancel" variant="secondary" fullWidth />
+            <MainButton title={t('Cancel')} variant="secondary" fullWidth />
           </UndecoratedLink>
-          <MainButton title="Authorize" onClick={handleAuthorize} fullWidth />
+          <MainButton
+            title={t('Authorize')}
+            onClick={handleAuthorize}
+            fullWidth
+          />
         </StyledButtonContainer>
       </StyledCardWrapper>
     </StyledContainer>

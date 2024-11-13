@@ -8,6 +8,7 @@ import { SettingsFieldType } from '@/settings/data-model/types/SettingsFieldType
 import { AppPath } from '@/types/AppPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useI18n } from '@quetzallabs/i18n';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -29,6 +30,7 @@ export type SettingsDataModelFieldTypeFormValues = z.infer<
 >;
 
 export const SettingsObjectNewFieldSelect = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const { objectSlug = '' } = useParams();
   const { findActiveObjectMetadataItemBySlug } =
@@ -56,22 +58,30 @@ export const SettingsObjectNewFieldSelect = () => {
   }, [activeObjectMetadataItem, navigate]);
 
   if (!activeObjectMetadataItem) return null;
-
+  
   return (
     <RecordFieldValueSelectorContextProvider>
       <FormProvider // eslint-disable-next-line react/jsx-props-no-spreading
         {...formMethods}
       >
         <SubMenuTopBarContainer
-          title="1. Select a field type"
+          title={t('1. Select a field type')}
           links={[
-            { children: 'Workspace', href: '/settings/workspace' },
-            { children: 'Objects', href: '/settings/objects' },
+            {
+              children: t('Workspace'),
+              href: '/settings/workspace',
+            },
+            {
+              children: t('Objects'),
+              href: '/settings/objects',
+            },
             {
               children: activeObjectMetadataItem.labelPlural,
               href: `/settings/objects/${objectSlug}`,
             },
-            { children: <SettingsDataModelNewFieldBreadcrumbDropDown /> },
+            {
+              children: <SettingsDataModelNewFieldBreadcrumbDropDown />,
+            },
           ]}
         >
           <SettingsPageContainer>

@@ -17,9 +17,10 @@ import { WorkspaceLogoUploader } from '@/settings/workspace/components/Workspace
 import { SnackBarVariant } from '@/ui/feedback/snack-bar-manager/components/SnackBar';
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { TextInputV2 } from '@/ui/input/components/TextInputV2';
+import { useI18n } from '@quetzallabs/i18n';
 import {
-  OnboardingStatus,
-  useActivateWorkspaceMutation,
+    OnboardingStatus,
+    useActivateWorkspaceMutation,
 } from '~/generated/graphql';
 import { isDefined } from '~/utils/isDefined';
 
@@ -36,15 +37,16 @@ const StyledButtonContainer = styled.div`
   width: 200px;
 `;
 
-const validationSchema = z
-  .object({
-    name: z.string().min(1, { message: 'Name can not be empty' }),
-  })
-  .required();
-
-type Form = z.infer<typeof validationSchema>;
-
 export const CreateWorkspace = () => {
+  const { t } = useI18n();
+  const validationSchema = z
+    .object({
+      name: z.string().min(1, {
+        message: t('Name can not be empty'),
+      }),
+    })
+    .required();
+  type Form = z.infer<typeof validationSchema>;
   const { enqueueSnackBar } = useSnackBar();
   const onboardingStatus = useOnboardingStatus();
 
@@ -82,7 +84,7 @@ export const CreateWorkspace = () => {
         });
 
         if (isDefined(result.errors)) {
-          throw result.errors ?? new Error('Unknown error');
+          throw result.errors ?? new Error(t('Unknown error'));
         }
       } catch (error: any) {
         enqueueSnackBar(error?.message, {
@@ -108,23 +110,24 @@ export const CreateWorkspace = () => {
   if (onboardingStatus !== OnboardingStatus.WorkspaceActivation) {
     return null;
   }
-
+  
   return (
     <>
-      <Title noMarginTop>Create your workspace</Title>
+      <Title noMarginTop>{t('Create your workspace')}</Title>
       <SubTitle>
-        A shared environment where you will be able to manage your customer
-        relations with your team.
+        {t(
+          'A shared environment where you will be able to manage your customer relations with your team.',
+        )}
       </SubTitle>
       <StyledContentContainer>
         <StyledSectionContainer>
-          <H2Title title="Workspace logo" />
+          <H2Title title={t('Workspace logo')} />
           <WorkspaceLogoUploader />
         </StyledSectionContainer>
         <StyledSectionContainer>
           <H2Title
-            title="Workspace name"
-            description="The name of your organization"
+            title={t('Workspace name')}
+            description={t('The name of your organization')}
           />
           <Controller
             name="name"
@@ -136,7 +139,7 @@ export const CreateWorkspace = () => {
               <TextInputV2
                 autoFocus
                 value={value}
-                placeholder="Apple"
+                placeholder={t('Apple')}
                 onBlur={onBlur}
                 onChange={onChange}
                 error={error?.message}
@@ -149,7 +152,7 @@ export const CreateWorkspace = () => {
       </StyledContentContainer>
       <StyledButtonContainer>
         <MainButton
-          title="Continue"
+          title={t('Continue')}
           onClick={handleSubmit(onSubmit)}
           disabled={!isValid || isSubmitting}
           Icon={() => isSubmitting && <Loader />}

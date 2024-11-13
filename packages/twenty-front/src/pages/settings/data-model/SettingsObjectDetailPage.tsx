@@ -17,18 +17,19 @@ import { useTabList } from '@/ui/layout/tab/hooks/useTabList';
 import { isAdvancedModeEnabledState } from '@/ui/navigation/navigation-drawer/states/isAdvancedModeEnabledState';
 import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
 import styled from '@emotion/styled';
+import { useI18n } from '@quetzallabs/i18n';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
-  Button,
-  H3Title,
-  IconCodeCircle,
-  IconListDetails,
-  IconPlus,
-  IconSettings,
-  IconTool,
-  MAIN_COLORS,
-  UndecoratedLink,
-  isDefined,
+    Button,
+    H3Title,
+    IconCodeCircle,
+    IconListDetails,
+    IconPlus,
+    IconSettings,
+    IconTool,
+    MAIN_COLORS,
+    UndecoratedLink,
+    isDefined,
 } from 'twenty-ui';
 import { SETTINGS_OBJECT_DETAIL_TABS } from '~/pages/settings/data-model/constants/SettingsObjectDetailTabs';
 import { updatedObjectSlugState } from '~/pages/settings/data-model/states/updatedObjectSlugState';
@@ -65,6 +66,7 @@ const StyledTitleContainer = styled.div`
 `;
 
 export const SettingsObjectDetailPage = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
 
   const { objectSlug = '' } = useParams();
@@ -104,19 +106,19 @@ export const SettingsObjectDetailPage = () => {
   const tabs = [
     {
       id: SETTINGS_OBJECT_DETAIL_TABS.TABS_IDS.FIELDS,
-      title: 'Fields',
+      title: t('Fields'),
       Icon: IconListDetails,
       hide: false,
     },
     {
       id: SETTINGS_OBJECT_DETAIL_TABS.TABS_IDS.SETTINGS,
-      title: 'Settings',
+      title: t('Settings'),
       Icon: IconSettings,
       hide: false,
     },
     {
       id: SETTINGS_OBJECT_DETAIL_TABS.TABS_IDS.INDEXES,
-      title: 'Indexes',
+      title: t('Indexes'),
       Icon: IconCodeCircle,
       hide: !isAdvancedModeEnabled || !isUniqueIndexesEnabled,
       pill: <IconTool size={12} color={MAIN_COLORS.yellow} />,
@@ -137,16 +139,19 @@ export const SettingsObjectDetailPage = () => {
   };
 
   const objectTypeLabel = getObjectTypeLabel(objectMetadataItem);
-
+  
   return (
     <>
       <SubMenuTopBarContainer
         links={[
           {
-            children: 'Workspace',
+            children: t('Workspace'),
             href: getSettingsPagePath(SettingsPath.Workspace),
           },
-          { children: 'Objects', href: '/settings/objects' },
+          {
+            children: t('Objects'),
+            href: '/settings/objects',
+          },
           {
             children: objectMetadataItem.labelPlural,
           },
@@ -155,7 +160,7 @@ export const SettingsObjectDetailPage = () => {
           activeTabId === SETTINGS_OBJECT_DETAIL_TABS.TABS_IDS.FIELDS && (
             <UndecoratedLink to={'./new-field/select'}>
               <Button
-                title="New Field"
+                title={t('New Field')}
                 variant="primary"
                 size="small"
                 accent="blue"

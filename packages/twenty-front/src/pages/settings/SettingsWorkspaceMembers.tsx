@@ -4,16 +4,16 @@ import { isNonEmptyArray } from '@sniptt/guards';
 import { useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
-  AppTooltip,
-  Avatar,
-  H2Title,
-  IconButton,
-  IconMail,
-  IconReload,
-  IconTrash,
-  Section,
-  Status,
-  TooltipDelay,
+    AppTooltip,
+    Avatar,
+    H2Title,
+    IconButton,
+    IconMail,
+    IconReload,
+    IconTrash,
+    Section,
+    Status,
+    TooltipDelay,
 } from 'twenty-ui';
 
 import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
@@ -33,6 +33,7 @@ import { TableHeader } from '@/ui/layout/table/components/TableHeader';
 import { WorkspaceMember } from '@/workspace-member/types/WorkspaceMember';
 import { WorkspaceInviteLink } from '@/workspace/components/WorkspaceInviteLink';
 import { WorkspaceInviteTeam } from '@/workspace/components/WorkspaceInviteTeam';
+import { useI18n } from '@quetzallabs/i18n';
 import { formatDistanceToNow } from 'date-fns';
 import { useGetWorkspaceInvitationsQuery } from '~/generated/graphql';
 import { isDefined } from '~/utils/isDefined';
@@ -70,6 +71,7 @@ const StyledTextContainerWithEllipsis = styled.div`
 `;
 
 export const SettingsWorkspaceMembers = () => {
+  const { t } = useI18n();
   const { enqueueSnackBar } = useSnackBar();
   const theme = useTheme();
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -110,9 +112,11 @@ export const SettingsWorkspaceMembers = () => {
   });
 
   const handleRemoveWorkspaceInvitation = async (appTokenId: string) => {
-    const result = await deleteWorkspaceInvitation({ appTokenId });
+    const result = await deleteWorkspaceInvitation({
+      appTokenId,
+    });
     if (isDefined(result.errors)) {
-      enqueueSnackBar('Error deleting invitation', {
+      enqueueSnackBar(t('Error deleting invitation'), {
         variant: SnackBarVariant.Error,
         duration: 2000,
       });
@@ -120,9 +124,11 @@ export const SettingsWorkspaceMembers = () => {
   };
 
   const handleResendWorkspaceInvitation = async (appTokenId: string) => {
-    const result = await resendInvitation({ appTokenId });
+    const result = await resendInvitation({
+      appTokenId,
+    });
     if (isDefined(result.errors)) {
-      enqueueSnackBar('Error resending invitation', {
+      enqueueSnackBar(t('Error resending invitation'), {
         variant: SnackBarVariant.Error,
         duration: 2000,
       });
@@ -132,19 +138,21 @@ export const SettingsWorkspaceMembers = () => {
   const getExpiresAtText = (expiresAt: string) => {
     const expiresAtDate = new Date(expiresAt);
     return expiresAtDate < new Date()
-      ? 'Expired'
+      ? t('Expired')
       : formatDistanceToNow(new Date(expiresAt));
   };
 
   return (
     <SubMenuTopBarContainer
-      title="Members"
+      title={t('Members')}
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
-        { children: 'Members' },
+        {
+          children: t('Members'),
+        },
       ]}
     >
       <SettingsPageContainer>
@@ -152,8 +160,10 @@ export const SettingsWorkspaceMembers = () => {
           currentWorkspace?.isPublicInviteLinkEnabled && (
             <Section>
               <H2Title
-                title="Invite by link"
-                description="Share this link to invite users to join your workspace"
+                title={t('Invite by link')}
+                description={t(
+                  'Share this link to invite users to join your workspace',
+                )}
               />
               <WorkspaceInviteLink
                 inviteLink={`${window.location.origin}/invite/${currentWorkspace?.inviteHash}`}
@@ -162,8 +172,8 @@ export const SettingsWorkspaceMembers = () => {
           )}
         <Section>
           <H2Title
-            title="Members"
-            description="Manage the members of your space here"
+            title={t('Members')}
+            description={t('Manage the members of your space here')}
           />
           <Table>
             <StyledTableHeaderRow>
@@ -171,8 +181,8 @@ export const SettingsWorkspaceMembers = () => {
                 gridAutoColumns="150px 1fr 1fr"
                 mobileGridAutoColumns="100px 1fr 1fr"
               >
-                <TableHeader>Name</TableHeader>
-                <TableHeader>Email</TableHeader>
+                <TableHeader>{t('Name')}</TableHeader>
+                <TableHeader>{t('Email')}</TableHeader>
                 <TableHeader align={'right'}></TableHeader>
               </TableRow>
             </StyledTableHeaderRow>
@@ -235,8 +245,8 @@ export const SettingsWorkspaceMembers = () => {
         </Section>
         <Section>
           <H2Title
-            title="Invite by email"
-            description="Send an invite email to your team"
+            title={t('Invite by email')}
+            description={t('Send an invite email to your team')}
           />
           <WorkspaceInviteTeam />
           {isNonEmptyArray(workspaceInvitations) && (
@@ -246,8 +256,8 @@ export const SettingsWorkspaceMembers = () => {
                   gridAutoColumns="150px 1fr 1fr"
                   mobileGridAutoColumns="100px 1fr 1fr"
                 >
-                  <TableHeader>Email</TableHeader>
-                  <TableHeader align={'right'}>Expires in</TableHeader>
+                  <TableHeader>{t('Email')}</TableHeader>
+                  <TableHeader align={'right'}>{t('Expires in')}</TableHeader>
                   <TableHeader></TableHeader>
                 </TableRow>
               </StyledTableHeaderRow>
@@ -308,18 +318,19 @@ export const SettingsWorkspaceMembers = () => {
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
         setIsOpen={setIsConfirmationModalOpen}
-        title="Account Deletion"
+        title={t('Account Deletion')}
         subtitle={
           <>
-            This action cannot be undone. This will permanently delete this user
-            and remove them from all their assignements.
+            {t(
+              'This action cannot be undone. This will permanently delete this user and remove them from all their assignements.',
+            )}
           </>
         }
         onConfirmClick={() =>
           workspaceMemberToDelete &&
           handleRemoveWorkspaceMember(workspaceMemberToDelete)
         }
-        deleteButtonText="Delete account"
+        deleteButtonText={t('Delete account')}
       />
     </SubMenuTopBarContainer>
   );

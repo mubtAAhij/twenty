@@ -3,14 +3,15 @@ import { AppPath } from '@/types/AppPath';
 
 import { PageTitle } from '@/ui/utilities/page-title/components/PageTitle';
 import styled from '@emotion/styled';
+import { useI18n } from '@quetzallabs/i18n';
 import {
-  AnimatedPlaceholder,
-  AnimatedPlaceholderEmptyTextContainer,
-  AnimatedPlaceholderErrorContainer,
-  AnimatedPlaceholderErrorSubTitle,
-  AnimatedPlaceholderErrorTitle,
-  MainButton,
-  UndecoratedLink,
+    AnimatedPlaceholder,
+    AnimatedPlaceholderEmptyTextContainer,
+    AnimatedPlaceholderErrorContainer,
+    AnimatedPlaceholderErrorSubTitle,
+    AnimatedPlaceholderErrorTitle,
+    MainButton,
+    UndecoratedLink,
 } from 'twenty-ui';
 
 const StyledBackDrop = styled.div`
@@ -33,24 +34,26 @@ const StyledButtonContainer = styled.div`
 `;
 
 export const NotFound = () => {
+  const { t } = useI18n();
   return (
     <>
-      <PageTitle title="Page Not Found | Twenty" />
+      <PageTitle title={t('Page Not Found | Twenty')} />
       <StyledBackDrop>
         <AnimatedPlaceholderErrorContainer>
           <AnimatedPlaceholder type="error404" />
           <AnimatedPlaceholderEmptyTextContainer>
             <AnimatedPlaceholderErrorTitle>
-              Off the beaten path
+              {t('Off the beaten path')}
             </AnimatedPlaceholderErrorTitle>
             <AnimatedPlaceholderErrorSubTitle>
-              The page you're seeking is either gone or never was. Let's get you
-              back on track
+              {t(
+                "The page you're seeking is either gone or never was. Let's get you back on track",
+              )}
             </AnimatedPlaceholderErrorSubTitle>
           </AnimatedPlaceholderEmptyTextContainer>
           <StyledButtonContainer>
             <UndecoratedLink to={AppPath.Index}>
-              <MainButton title="Back to content" fullWidth />
+              <MainButton title={t('Back to content')} fullWidth />
             </UndecoratedLink>
           </StyledButtonContainer>
         </AnimatedPlaceholderErrorContainer>

@@ -9,9 +9,9 @@ import { getForeignDataWrapperType } from '@/databases/utils/getForeignDataWrapp
 import { SaveAndCancelButtons } from '@/settings/components/SaveAndCancelButtons/SaveAndCancelButtons';
 import { SettingsPageContainer } from '@/settings/components/SettingsPageContainer';
 import {
-  SettingsIntegrationDatabaseConnectionForm,
-  settingsIntegrationPostgreSQLConnectionFormSchema,
-  settingsIntegrationStripeConnectionFormSchema,
+    SettingsIntegrationDatabaseConnectionForm,
+    settingsIntegrationPostgreSQLConnectionFormSchema,
+    settingsIntegrationStripeConnectionFormSchema,
 } from '@/settings/integrations/database-connection/components/SettingsIntegrationDatabaseConnectionForm';
 import { useIsSettingsIntegrationEnabled } from '@/settings/integrations/hooks/useIsSettingsIntegrationEnabled';
 import { useSettingsIntegrationCategories } from '@/settings/integrations/hooks/useSettingsIntegrationCategories';
@@ -21,6 +21,7 @@ import { SettingsPath } from '@/types/SettingsPath';
 import { SnackBarVariant } from '@/ui/feedback/snack-bar-manager/components/SnackBar';
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 import { H2Title, Section } from 'twenty-ui';
 import { CreateRemoteServerInput } from '~/generated-metadata/graphql';
 
@@ -66,6 +67,7 @@ type SettingsIntegrationNewConnectionFormValues =
   | SettingsIntegrationNewConnectionStripeFormValues;
 
 export const SettingsIntegrationNewDatabaseConnection = () => {
+  const { t } = useI18n();
   const { databaseKey = '' } = useParams();
   const navigate = useNavigate();
 
@@ -127,24 +129,26 @@ export const SettingsIntegrationNewDatabaseConnection = () => {
       });
     }
   };
-
+  
   return (
     <SubMenuTopBarContainer
-      title="New"
+      title={t('New')}
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
         {
-          children: 'Integrations',
+          children: t('Integrations'),
           href: settingsIntegrationsPagePath,
         },
         {
           children: integration.text,
           href: `${settingsIntegrationsPagePath}/${databaseKey}`,
         },
-        { children: 'New' },
+        {
+          children: t('New'),
+        },
       ]}
       actionButton={
         <SaveAndCancelButtons
@@ -163,8 +167,10 @@ export const SettingsIntegrationNewDatabaseConnection = () => {
         >
           <Section>
             <H2Title
-              title="Connect a new database"
-              description="Provide the information to connect your database"
+              title={t('Connect a new database')}
+              description={t(
+                'Provide the information to connect your database',
+              )}
             />
             <SettingsIntegrationDatabaseConnectionForm
               databaseKey={databaseKey}

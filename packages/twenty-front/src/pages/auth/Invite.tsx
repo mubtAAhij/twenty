@@ -7,13 +7,14 @@ import { useWorkspaceFromInviteHash } from '@/auth/sign-in-up/hooks/useWorkspace
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { useWorkspaceSwitching } from '@/ui/navigation/navigation-drawer/hooks/useWorkspaceSwitching';
 import styled from '@emotion/styled';
+import { useI18n } from '@quetzallabs/i18n';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { AnimatedEaseIn, Loader, MainButton } from 'twenty-ui';
 import {
-  useAddUserToWorkspaceByInviteTokenMutation,
-  useAddUserToWorkspaceMutation,
+    useAddUserToWorkspaceByInviteTokenMutation,
+    useAddUserToWorkspaceMutation,
 } from '~/generated/graphql';
 import { isDefined } from '~/utils/isDefined';
 
@@ -23,9 +24,10 @@ const StyledContentContainer = styled.div`
 `;
 
 export const Invite = () => {
+  const { t } = useI18n();
   const { workspace: workspaceFromInviteHash, workspaceInviteHash } =
     useWorkspaceFromInviteHash();
-
+    
   const { form } = useSignInUpForm();
   const currentWorkspace = useRecoilValue(currentWorkspaceState);
   const [addUserToWorkspace] = useAddUserToWorkspaceMutation();
@@ -36,7 +38,9 @@ export const Invite = () => {
   const workspaceInviteToken = searchParams.get('inviteToken');
 
   const title = useMemo(() => {
-    return `Join ${workspaceFromInviteHash?.displayName ?? ''} team`;
+    return t('Join {dynamic1} team', {
+      dynamic1: workspaceFromInviteHash?.displayName ?? '',
+    });
   }, [workspaceFromInviteHash?.displayName]);
 
   const handleUserJoinWorkspace = async () => {
@@ -81,7 +85,7 @@ export const Invite = () => {
         <>
           <StyledContentContainer>
             <MainButton
-              title="Continue"
+              title={t('Continue')}
               type="submit"
               onClick={handleUserJoinWorkspace}
               Icon={() => form.formState.isSubmitting && <Loader />}

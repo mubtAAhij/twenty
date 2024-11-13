@@ -3,21 +3,25 @@ import { SettingsPageContainer } from '@/settings/components/SettingsPageContain
 import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 
 export const SettingsNewAccount = () => {
+  const { t } = useI18n();
   return (
     <SubMenuTopBarContainer
-      title="New Account"
+      title={t('New Account')}
       links={[
         {
-          children: 'User',
+          children: t('User'),
           href: getSettingsPagePath(SettingsPath.ProfilePage),
         },
         {
-          children: 'Accounts',
+          children: t('Accounts'),
           href: getSettingsPagePath(SettingsPath.Accounts),
         },
-        { children: `New` },
+        {
+          children: t('New'),
+        },
       ]}
     >
       <SettingsPageContainer>

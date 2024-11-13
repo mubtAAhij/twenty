@@ -9,8 +9,8 @@ import { getObjectSlug } from '@/object-metadata/utils/getObjectSlug';
 import { SaveAndCancelButtons } from '@/settings/components/SaveAndCancelButtons/SaveAndCancelButtons';
 import { SettingsPageContainer } from '@/settings/components/SettingsPageContainer';
 import {
-  SettingsDataModelObjectAboutForm,
-  settingsDataModelObjectAboutFormSchema,
+    SettingsDataModelObjectAboutForm,
+    settingsDataModelObjectAboutFormSchema,
 } from '@/settings/data-model/objects/forms/components/SettingsDataModelObjectAboutForm';
 import { settingsCreateObjectInputSchema } from '@/settings/data-model/validation-schemas/settingsCreateObjectInputSchema';
 import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
@@ -18,15 +18,16 @@ import { SettingsPath } from '@/types/SettingsPath';
 import { SnackBarVariant } from '@/ui/feedback/snack-bar-manager/components/SnackBar';
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 
 const newObjectFormSchema = settingsDataModelObjectAboutFormSchema;
 
 type SettingsDataModelNewObjectFormValues = z.infer<typeof newObjectFormSchema>;
 
 export const SettingsNewObject = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const { enqueueSnackBar } = useSnackBar();
-
   const { createOneObjectMetadataItem, findManyRecordsCache } =
     useCreateOneObjectMetadataItem();
 
@@ -50,9 +51,7 @@ export const SettingsNewObject = () => {
 
       navigate(
         response
-          ? `${settingsObjectsPagePath}/${getObjectSlug(
-              response.createOneObject,
-            )}`
+          ? `${settingsObjectsPagePath}/${getObjectSlug(response.createOneObject)}`
           : settingsObjectsPagePath,
       );
 
@@ -63,22 +62,24 @@ export const SettingsNewObject = () => {
       });
     }
   };
-
+  
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <FormProvider {...formConfig}>
       <SubMenuTopBarContainer
-        title="New Object"
+        title={t('New Object')}
         links={[
           {
-            children: 'Workspace',
+            children: t('Workspace'),
             href: getSettingsPagePath(SettingsPath.Workspace),
           },
           {
-            children: 'Objects',
+            children: t('Objects'),
             href: settingsObjectsPagePath,
           },
-          { children: 'New' },
+          {
+            children: t('New'),
+          },
         ]}
         actionButton={
           <SaveAndCancelButtons
@@ -92,8 +93,10 @@ export const SettingsNewObject = () => {
         <SettingsPageContainer>
           <Section>
             <H2Title
-              title="About"
-              description="Name in both singular (e.g., 'Invoice') and plural (e.g., 'Invoices') forms."
+              title={t('About')}
+              description={t(
+                "Name in both singular (e.g., 'Invoice') and plural (e.g., 'Invoices') forms.",
+              )}
             />
             <SettingsDataModelObjectAboutForm />
           </Section>

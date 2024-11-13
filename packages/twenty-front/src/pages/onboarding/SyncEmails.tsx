@@ -15,11 +15,12 @@ import { useScopedHotkeys } from '@/ui/utilities/hotkey/hooks/useScopedHotkeys';
 
 import { useTriggerApisOAuth } from '@/settings/accounts/hooks/useTriggerApiOAuth';
 import { AppPath } from '@/types/AppPath';
+import { useI18n } from '@quetzallabs/i18n';
 import {
-  CalendarChannelVisibility,
-  MessageChannelVisibility,
-  OnboardingStatus,
-  useSkipSyncEmailOnboardingStepMutation,
+    CalendarChannelVisibility,
+    MessageChannelVisibility,
+    OnboardingStatus,
+    useSkipSyncEmailOnboardingStepMutation,
 } from '~/generated/graphql';
 
 const StyledSyncEmailsContainer = styled.div`
@@ -37,6 +38,7 @@ const StyledActionLinkContainer = styled.div`
 `;
 
 export const SyncEmails = () => {
+  const { t } = useI18n();
   const theme = useTheme();
   const { triggerApisOAuth } = useTriggerApisOAuth();
   const setNextOnboardingStatus = useSetNextOnboardingStatus();
@@ -77,12 +79,14 @@ export const SyncEmails = () => {
   if (currentUser?.onboardingStatus !== OnboardingStatus.SyncEmail) {
     return <></>;
   }
-
+  
   return (
     <>
-      <Title noMarginTop>Emails and Calendar</Title>
+      <Title noMarginTop>{t('Emails and Calendar')}</Title>
       <SubTitle>
-        Sync your Emails and Calendar with Twenty. Choose your privacy settings.
+        {t(
+          'Sync your Emails and Calendar with Twenty. Choose your privacy settings.',
+        )}
       </SubTitle>
       <StyledSyncEmailsContainer>
         <OnboardingSyncEmailsSettingsCard
@@ -91,14 +95,14 @@ export const SyncEmails = () => {
         />
       </StyledSyncEmailsContainer>
       <MainButton
-        title="Sync with Google"
+        title={t('Sync with Google')}
         onClick={handleButtonClick}
         width={200}
         Icon={() => <IconGoogle size={theme.icon.size.sm} />}
       />
       <StyledActionLinkContainer>
         <ActionLink onClick={continueWithoutSync}>
-          Continue without sync
+          {t('Continue without sync')}
         </ActionLink>
       </StyledActionLinkContainer>
     </>

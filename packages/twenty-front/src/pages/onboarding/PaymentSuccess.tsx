@@ -2,17 +2,18 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
 import {
-  AnimatedEaseIn,
-  IconCheck,
-  MainButton,
-  RGBA,
-  UndecoratedLink,
+    AnimatedEaseIn,
+    IconCheck,
+    MainButton,
+    RGBA,
+    UndecoratedLink,
 } from 'twenty-ui';
 
 import { SubTitle } from '@/auth/components/SubTitle';
 import { Title } from '@/auth/components/Title';
 import { currentUserState } from '@/auth/states/currentUserState';
 import { AppPath } from '@/types/AppPath';
+import { useI18n } from '@quetzallabs/i18n';
 import { OnboardingStatus } from '~/generated/graphql';
 
 const StyledCheckContainer = styled.div`
@@ -33,6 +34,7 @@ const StyledButtonContainer = styled.div`
 `;
 
 export const PaymentSuccess = () => {
+  const { t } = useI18n();
   const theme = useTheme();
   const currentUser = useRecoilValue(currentUserState);
   const color =
@@ -41,7 +43,7 @@ export const PaymentSuccess = () => {
   if (currentUser?.onboardingStatus === OnboardingStatus.Completed) {
     return <></>;
   }
-
+  
   return (
     <>
       <AnimatedEaseIn>
@@ -49,11 +51,11 @@ export const PaymentSuccess = () => {
           <IconCheck color={color} size={24} stroke={3} />
         </StyledCheckContainer>
       </AnimatedEaseIn>
-      <Title>All set!</Title>
-      <SubTitle>Your account has been activated.</SubTitle>
+      <Title>{t('All set!')}</Title>
+      <SubTitle>{t('Your account has been activated.')}</SubTitle>
       <StyledButtonContainer>
         <UndecoratedLink to={AppPath.CreateWorkspace}>
-          <MainButton title="Start" width={200} />
+          <MainButton title={t('Start')} width={200} />
         </UndecoratedLink>
       </StyledButtonContainer>
     </>

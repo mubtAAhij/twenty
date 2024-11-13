@@ -1,7 +1,7 @@
 import { ObjectMetadataItem } from '@/object-metadata/types/ObjectMetadataItem';
 import {
-  SettingsObjectFieldItemTableRow,
-  StyledObjectFieldTableRow,
+    SettingsObjectFieldItemTableRow,
+    StyledObjectFieldTableRow,
 } from '@/settings/data-model/object-details/components/SettingsObjectFieldItemTableRow';
 import { settingsObjectFieldsFamilyState } from '@/settings/data-model/object-details/states/settingsObjectFieldsFamilyState';
 import { TextInput } from '@/ui/input/components/TextInput';
@@ -12,70 +12,13 @@ import { TableSection } from '@/ui/layout/table/components/TableSection';
 import { useSortedArray } from '@/ui/layout/table/hooks/useSortedArray';
 import { TableMetadata } from '@/ui/layout/table/types/TableMetadata';
 import styled from '@emotion/styled';
+import { useI18n } from '@quetzallabs/i18n';
 import { isNonEmptyArray } from '@sniptt/guards';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { IconSearch } from 'twenty-ui';
 import { useMapFieldMetadataItemToSettingsObjectDetailTableItem } from '~/pages/settings/data-model/hooks/useMapFieldMetadataItemToSettingsObjectDetailTableItem';
 import { SettingsObjectDetailTableItem } from '~/pages/settings/data-model/types/SettingsObjectDetailTableItem';
-
-const SETTINGS_OBJECT_DETAIL_TABLE_METADATA_STANDARD: TableMetadata<SettingsObjectDetailTableItem> =
-  {
-    tableId: 'settingsObjectDetail',
-    fields: [
-      {
-        fieldLabel: 'Name',
-        fieldName: 'label',
-        fieldType: 'string',
-        align: 'left',
-      },
-      {
-        fieldLabel: 'Field type',
-        fieldName: 'fieldType',
-        fieldType: 'string',
-        align: 'left',
-      },
-      {
-        fieldLabel: 'Data type',
-        fieldName: 'dataType',
-        fieldType: 'string',
-        align: 'left',
-      },
-    ],
-    initialSort: {
-      fieldName: 'label',
-      orderBy: 'AscNullsLast',
-    },
-  };
-
-const SETTINGS_OBJECT_DETAIL_TABLE_METADATA_CUSTOM: TableMetadata<SettingsObjectDetailTableItem> =
-  {
-    tableId: 'settingsObjectDetail',
-    fields: [
-      {
-        fieldLabel: 'Name',
-        fieldName: 'label',
-        fieldType: 'string',
-        align: 'left',
-      },
-      {
-        fieldLabel: 'Identifier',
-        fieldName: 'identifierType',
-        fieldType: 'string',
-        align: 'left',
-      },
-      {
-        fieldLabel: 'Data type',
-        fieldName: 'dataType',
-        fieldType: 'string',
-        align: 'left',
-      },
-    ],
-    initialSort: {
-      fieldName: 'label',
-      orderBy: 'AscNullsLast',
-    },
-  };
 
 const StyledSearchInput = styled(TextInput)`
   padding-bottom: ${({ theme }) => theme.spacing(2)};
@@ -91,6 +34,65 @@ export const SettingsObjectFieldTable = ({
   objectMetadataItem,
   mode,
 }: SettingsObjectFieldTableProps) => {
+  const { t } = useI18n();
+  const SETTINGS_OBJECT_DETAIL_TABLE_METADATA_STANDARD: TableMetadata<SettingsObjectDetailTableItem> =
+    {
+      tableId: 'settingsObjectDetail',
+      fields: [
+        {
+          fieldLabel: t('Name'),
+          fieldName: 'label',
+          fieldType: 'string',
+          align: 'left',
+        },
+        {
+          fieldLabel: t('Field type'),
+          fieldName: 'fieldType',
+          fieldType: 'string',
+          align: 'left',
+        },
+        {
+          fieldLabel: t('Data type'),
+          fieldName: 'dataType',
+          fieldType: 'string',
+          align: 'left',
+        },
+      ],
+      initialSort: {
+        fieldName: 'label',
+        orderBy: 'AscNullsLast',
+      },
+    };
+
+  const SETTINGS_OBJECT_DETAIL_TABLE_METADATA_CUSTOM: TableMetadata<SettingsObjectDetailTableItem> =
+    {
+      tableId: 'settingsObjectDetail',
+      fields: [
+        {
+          fieldLabel: t('Name'),
+          fieldName: 'label',
+          fieldType: 'string',
+          align: 'left',
+        },
+        {
+          fieldLabel: t('Identifier'),
+          fieldName: 'identifierType',
+          fieldType: 'string',
+          align: 'left',
+        },
+        {
+          fieldLabel: t('Data type'),
+          fieldName: 'dataType',
+          fieldType: 'string',
+          align: 'left',
+        },
+      ],
+      initialSort: {
+        fieldName: 'label',
+        orderBy: 'AscNullsLast',
+      },
+    };
+
   const [searchTerm, setSearchTerm] = useState('');
 
   const tableMetadata = objectMetadataItem.isCustom
@@ -171,12 +173,12 @@ export const SettingsObjectFieldTable = ({
       ),
     [sortedDisabledObjectSettingsDetailItems, searchTerm],
   );
-
+  
   return (
     <>
       <StyledSearchInput
         LeftIcon={IconSearch}
-        placeholder="Search a field..."
+        placeholder={t('Search a field...')}
         value={searchTerm}
         onChange={setSearchTerm}
       />
@@ -194,7 +196,7 @@ export const SettingsObjectFieldTable = ({
           <TableHeader></TableHeader>
         </StyledObjectFieldTableRow>
         {isNonEmptyArray(filteredActiveItems) && (
-          <TableSection title="Active">
+          <TableSection title={t('Active')}>
             {filteredActiveItems.map((objectSettingsDetailItem) => (
               <SettingsObjectFieldItemTableRow
                 key={objectSettingsDetailItem.fieldMetadataItem.id}
@@ -208,7 +210,7 @@ export const SettingsObjectFieldTable = ({
         {isNonEmptyArray(filteredDisabledItems) && (
           <TableSection
             isInitiallyExpanded={mode === 'new-field' ? true : false}
-            title="Inactive"
+            title={t('Inactive')}
           >
             {filteredDisabledItems.map((objectSettingsDetailItem) => (
               <SettingsObjectFieldItemTableRow

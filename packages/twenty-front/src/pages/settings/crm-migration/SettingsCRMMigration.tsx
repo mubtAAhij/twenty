@@ -8,22 +8,26 @@ import { SettingsReadDocumentationButton } from '@/settings/developers/component
 import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 import { useRecoilValue } from 'recoil';
 import { Section } from 'twenty-ui';
 
 const REVERT_PUBLIC_KEY = 'pk_live_a87fee8c-28c7-494f-99a3-996ff89f9918';
 
 export const SettingsCRMMigration = () => {
+  const { t } = useI18n();
   const currentWorkspace = useRecoilValue(currentWorkspaceState);
   return (
     <SubMenuTopBarContainer
-      title="Migrate"
+      title={t('Migrate')}
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
-        { children: 'Migrate' },
+        {
+          children: t('Migrate'),
+        },
       ]}
       actionButton={<SettingsReadDocumentationButton />}
     >

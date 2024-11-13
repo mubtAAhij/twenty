@@ -3,21 +3,25 @@ import { SettingsIntegrationDatabaseConnectionShowContainer } from '@/settings/i
 import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 
 export const SettingsIntegrationShowDatabaseConnection = () => {
+  const { t } = useI18n();
   return (
     <SubMenuTopBarContainer
-      title="Database Connection"
+      title={t('Database Connection')}
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
         {
-          children: 'Integrations',
+          children: t('Integrations'),
           href: getSettingsPagePath(SettingsPath.Integrations),
         },
-        { children: 'Database Connection' },
+        {
+          children: t('Database Connection'),
+        },
       ]}
     >
       <SettingsPageContainer>

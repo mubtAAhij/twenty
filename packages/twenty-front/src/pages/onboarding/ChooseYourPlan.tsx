@@ -8,21 +8,22 @@ import { AppPath } from '@/types/AppPath';
 import { SnackBarVariant } from '@/ui/feedback/snack-bar-manager/components/SnackBar';
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import styled from '@emotion/styled';
+import { useI18n } from '@quetzallabs/i18n';
 import { isNonEmptyString, isNumber } from '@sniptt/guards';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
-  ActionLink,
-  CAL_LINK,
-  CardPicker,
-  Loader,
-  MainButton,
+    ActionLink,
+    CAL_LINK,
+    CardPicker,
+    Loader,
+    MainButton,
 } from 'twenty-ui';
 import {
-  ProductPriceEntity,
-  SubscriptionInterval,
-  useCheckoutSessionMutation,
-  useGetProductPricesQuery,
+    ProductPriceEntity,
+    SubscriptionInterval,
+    useCheckoutSessionMutation,
+    useGetProductPricesQuery,
 } from '~/generated/graphql';
 import { isDefined } from '~/utils/isDefined';
 
@@ -64,17 +65,8 @@ const StyledLinkGroup = styled.div`
   }
 `;
 
-const benefits = [
-  'Full access',
-  'Unlimited contacts',
-  'Email integration',
-  'Custom objects',
-  'API & Webhooks',
-  'Frequent updates',
-  'And much more',
-];
-
 export const ChooseYourPlan = () => {
+  const { t } = useI18n();
   const billing = useRecoilValue(billingState);
 
   const [planSelected, setPlanSelected] = useState(SubscriptionInterval.Month);
@@ -84,7 +76,9 @@ export const ChooseYourPlan = () => {
   const { enqueueSnackBar } = useSnackBar();
 
   const { data: prices } = useGetProductPricesQuery({
-    variables: { product: 'base-plan' },
+    variables: {
+      product: 'base-plan',
+    },
   });
 
   const [checkoutSession] = useCheckoutSessionMutation();
@@ -99,12 +93,22 @@ export const ChooseYourPlan = () => {
 
   const { signOut } = useAuth();
 
+  const benefits = [
+    t('Full access'),
+    t('Unlimited contacts'),
+    t('Email integration'),
+    t('Custom objects'),
+    t('API & Webhooks'),
+    t('Frequent updates'),
+    t('And much more'),
+  ];
+
   const computeInfo = (
     price: ProductPriceEntity,
     prices: ProductPriceEntity[],
   ): string => {
     if (price.recurringInterval !== SubscriptionInterval.Year) {
-      return 'Cancel anytime';
+      return t('Cancel anytime');
     }
     const monthPrice = prices.filter(
       (price) => price.recurringInterval === SubscriptionInterval.Month,
@@ -116,9 +120,11 @@ export const ChooseYourPlan = () => {
       isNumber(price.unitAmount) &&
       price.unitAmount > 0
     ) {
-      return `Save $${(12 * monthPrice.unitAmount - price.unitAmount) / 100}`;
+      return t('Save ${dynamic1}', {
+        dynamic1: (12 * monthPrice.unitAmount - price.unitAmount) / 100,
+      });
     }
-    return 'Cancel anytime';
+    return t('Cancel anytime');
   };
 
   const handleButtonClick = async () => {
@@ -132,7 +138,7 @@ export const ChooseYourPlan = () => {
     setIsSubmitting(false);
     if (!data?.checkoutSession.url) {
       enqueueSnackBar(
-        'Checkout session error. Please retry or contact Twenty team',
+        t('Checkout session error. Please retry or contact Twenty team'),
         {
           variant: SnackBarVariant.Error,
         },
@@ -141,13 +147,15 @@ export const ChooseYourPlan = () => {
     }
     window.location.replace(data.checkoutSession.url);
   };
-
+  
   return (
     prices?.getProductPrices?.productPrices && (
       <>
-        <Title noMarginTop>Choose your Plan</Title>
+        <Title noMarginTop>{t('Choose your Plan')}</Title>
         <SubTitle>
-          Enjoy a {billing?.billingFreeTrialDurationInDays}-day free trial
+          {t('Enjoy a {dynamic1}-day free trial', {
+            dynamic1: billing?.billingFreeTrialDurationInDays,
+          })}
         </SubTitle>
         <StyledChoosePlanContainer>
           {prices.getProductPrices.productPrices.map((price, index) => (
@@ -170,17 +178,17 @@ export const ChooseYourPlan = () => {
           ))}
         </StyledBenefitsContainer>
         <MainButton
-          title="Continue"
+          title={t('Continue')}
           onClick={handleButtonClick}
           width={200}
           Icon={() => isSubmitting && <Loader />}
           disabled={isSubmitting}
         />
         <StyledLinkGroup>
-          <ActionLink onClick={signOut}>Log out</ActionLink>
+          <ActionLink onClick={signOut}>{t('Log out')}</ActionLink>
           <span />
           <ActionLink href={CAL_LINK} target="_blank" rel="noreferrer">
-            Book a Call
+            {t('Book a Call')}
           </ActionLink>
         </StyledLinkGroup>
       </>

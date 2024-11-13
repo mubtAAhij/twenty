@@ -1,4 +1,4 @@
-import { H2Title, Section, IconLock, Tag } from 'twenty-ui';
+import { H2Title, IconLock, Section, Tag } from 'twenty-ui';
 
 import { SettingsPageContainer } from '@/settings/components/SettingsPageContainer';
 import { SettingsReadDocumentationButton } from '@/settings/developers/components/SettingsReadDocumentationButton';
@@ -7,28 +7,32 @@ import { SettingsSecurityOptionsList } from '@/settings/security/components/Sett
 import { getSettingsPagePath } from '@/settings/utils/getSettingsPagePath';
 import { SettingsPath } from '@/types/SettingsPath';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
+import { useI18n } from '@quetzallabs/i18n';
 
 export const SettingsSecurity = () => {
+  const { t } = useI18n();
   return (
     <SubMenuTopBarContainer
-      title="Security"
+      title={t('Security')}
       actionButton={<SettingsReadDocumentationButton />}
       links={[
         {
-          children: 'Workspace',
+          children: t('Workspace'),
           href: getSettingsPagePath(SettingsPath.Workspace),
         },
-        { children: 'Security' },
+        {
+          children: t('Security'),
+        },
       ]}
     >
       <SettingsPageContainer>
         <Section>
           <H2Title
-            title="SSO"
-            description="Configure an SSO connection"
+            title={t('SSO')}
+            description={t('Configure an SSO connection')}
             addornment={
               <Tag
-                text={'Enterprise'}
+                text={t('Enterprise')}
                 color={'transparent'}
                 Icon={IconLock}
                 variant={'border'}
@@ -39,8 +43,8 @@ export const SettingsSecurity = () => {
         </Section>
         <Section>
           <H2Title
-            title="Other"
-            description="Customize your workspace security"
+            title={t('Other')}
+            description={t('Customize your workspace security')}
           />
           <SettingsSecurityOptionsList />
         </Section>
