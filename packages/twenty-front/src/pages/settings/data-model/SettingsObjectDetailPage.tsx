@@ -143,6 +143,12 @@ export const SettingsObjectDetailPage = () => {
   return (
     <>
       <SubMenuTopBarContainer
+        title={
+          <StyledTitleContainer>
+            <H3Title title={objectMetadataItem.labelPlural} />
+            <StyledObjectTypeTag objectTypeLabel={objectTypeLabel} />
+          </StyledTitleContainer>
+        }
         links={[
           {
             children: t('Workspace'),
@@ -171,10 +177,6 @@ export const SettingsObjectDetailPage = () => {
         }
       >
         <SettingsPageContainer>
-          <StyledTitleContainer>
-            <H3Title title={objectMetadataItem.labelPlural} />
-            <StyledObjectTypeTag objectTypeLabel={objectTypeLabel} />
-          </StyledTitleContainer>
           <StyledTabListContainer>
             <TabList
               tabListInstanceId={
